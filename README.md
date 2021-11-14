@@ -1,4 +1,4 @@
-# video-stream
+# hls-express-video-stream
 
 This project uses express and hls-server, along with ffmpeg (installed locally) to accept hls (m3u8) video requests, and generate and serve them from mp4 videos. The generation uses ffmpeg which has to be available locally. If a video hasn't been processed, it will be split into 5 second segments and a playlist generated.
 
