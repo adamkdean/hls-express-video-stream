@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Stream</title>
+</head>
+<body>
+
+  <h1>Video Stream</h1>
+
+  <video id="video" width="400" height="300" controls></video>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    const video = document.getElementById('video')
+    const videoSource = '/v/earth_1920_1080.m3u8'
+
+    if (Hls.isSupported()) {
+      const hls = new Hls()
+      hls.loadSource(videoSource)
+      hls.attachMedia(video)
+      hls.on(Hls.Events.MANIFEST_PARSED, function() {
+        video.play()
+      })
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = videoSource
+      video.addEventListener('loadedmetadata', function() {
+        video.play()
+      })
+    }
+  </script>
+
+</body>
+</html>
