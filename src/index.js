@@ -7,8 +7,6 @@ const fs = require('fs')
 const hls = require('hls-server')
 const path = require('path')
 
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-
 const htmlDir = path.join(__dirname, '../static/html')
 const videoDir = path.join(__dirname, '../static/videos')
 
@@ -67,13 +65,8 @@ new hls(server, {
 
           await new Promise((resolve, reject) => {
             console.log('cmd', cmd)
-            exec(cmd, (err, stdout, stderr) => {
-              if (err) {
-                console.error(err)
-                return reject(err)
-              }
-              console.log(stdout)
-              console.log(stderr)
+            exec(cmd, (err) => {
+              if (err) return reject(err)
               resolve()
             })
           })
@@ -91,10 +84,8 @@ new hls(server, {
 
         console.log('checking video playlist exists')
         fs.access(`${videoDir}/${filename}/${filename}.m3u8`, fs.constants.F_OK, (err) => {
-          if (err) {
-            console.error(err)
-            return cb(null, false)
-          }
+          if (err) return cb(null, false)
+
           console.log('video playlist exists')
           return cb(null, true)
         })
@@ -111,7 +102,6 @@ new hls(server, {
     getSegmentStream: (req, cb) => {
       console.log('-> get segment', req.url)
 
-      // from req.url as format /v/earth_1920_1080/earth_1920_10800.ts extract last two parts
       const urlParts = req.url.split('/')
       const filename = urlParts.pop().split('.')[0]
       const video = urlParts.pop()
